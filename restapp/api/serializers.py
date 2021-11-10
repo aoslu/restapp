@@ -62,28 +62,9 @@ class CustomersSerializer(serializers.ModelSerializer):
               )
          return value
 
-
-
-class GazeteciSerializer(serializers.ModelSerializer):
-    class Meta:
-        model = Gazeteci
-        fields= '__all__'
-        read_only_fields= ['id',]
-
-    def validate(self, data):
-         if data['isim'] == data['soyisim']:
-             raise serializers.ValidationError(
-                 'Ad ve Soyad Aynı Olamaz' 
-              )
-         return data
-    def validate_isim(self, value):
-         if len(value) < 5 :
-             raise serializers.ValidationError(
-                 f'İsminiz 5 haneden küçük olamaz. Siz {len(value)} karakter girdiniz'
-              )
-         return value
-
 class MakaleSerializer(serializers.ModelSerializer):
+    
+    #yazar = serializers.StringRelatedField()   =>>Bu kod gazetecilerin makalelerini yazar id si yerine listelenmesini sağlar
     class Meta:
         model = Makale
         fields= '__all__'
@@ -99,6 +80,27 @@ class MakaleSerializer(serializers.ModelSerializer):
          if len(value) < 5 :
              raise serializers.ValidationError(
                  f'Başlık 5 haneden küçük olamaz. Siz {len(value)} karakter girdiniz'
+              )
+         return value
+class GazeteciSerializer(serializers.ModelSerializer):
+    
+    #makaleler = MakaleSerializer(many=True, read_only =True)
+    makaleler = serializers.HyperlinkedRelatedField(many=True, read_only= True, view_name='makale-listesi-detay')
+    class Meta:
+        model = Gazeteci
+        fields= '__all__'
+        read_only_fields= ['id',]
+
+    def validate(self, data):
+         if data['isim'] == data['soyisim']:
+             raise serializers.ValidationError(
+                 'Ad ve Soyad Aynı Olamaz' 
+              )
+         return data
+    def validate_isim(self, value):
+         if len(value) < 5 :
+             raise serializers.ValidationError(
+                 f'İsminiz 5 haneden küçük olamaz. Siz {len(value)} karakter girdiniz'
               )
          return value
 #standart serializer...........................................

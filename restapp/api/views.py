@@ -167,8 +167,8 @@ class MakaleDetailAPIView(APIView):
         return Response(status= status.HTTP_204_NO_CONTENT)
 class GazeteciListCreateAPIView(APIView):
     def get(self, request):
-        gazeteci= Gazeteci.objects.filter()
-        serializer = GazeteciSerializer(gazeteci, many=True)
+        gazeteci= Gazeteci.objects.all()
+        serializer = GazeteciSerializer(gazeteci, many=True, context={'request': request})
         return Response(serializer.data)
     def post(self, request):
         serializer =GazeteciSerializer(data=request.data)
