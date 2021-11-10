@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.response import Response
-from restapp.models import Customers, ProductModel, KategoriModel
-from restapp.api.serializers import CustomersSerializer, ProductModelSerializer, KategoriModelSerializer
+from restapp.models import Customers, ProductModel, KategoriModel,Makale, Gazeteci
+from restapp.api.serializers import CustomersSerializer, ProductModelSerializer, KategoriModelSerializer,MakaleSerializer,GazeteciSerializer
 from rest_framework.views import APIView
 from rest_framework.generics import get_object_or_404
 
@@ -125,6 +125,45 @@ class KategoriModelDetailAPIView(APIView):
     def delete(self, request, pk):
         kategori = self.get_object(pk=pk)
         kategori.delete()
+        return Response(status= status.HTTP_204_NO_CONTENT)
+
+
+
+
+
+class MakaleListCreateAPIView(APIView):
+    def get(self, request):
+        makale= Makale.objects.filter()
+        serializer = MakaleSerializer(makale, many=True)
+        return Response(serializer.data)
+    def post(self, request):
+        serializer =MakaleSerializer(data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data, status= status.HTTP_201_CREATED)
+        return Response(status= status.HTTP_400_BAD_REQUEST)
+
+class MakaleDetailAPIView(APIView):
+    def get_object(self, pk):
+         makale= get_object_or_404(Makale, pk=pk)
+         return makale
+
+    def get(self, request, pk):
+        makale = self.get_object(pk=pk)
+        serializer = MakaleSerializer(makale)
+        return Response(serializer.data)
+
+    def put(self, request,pk):
+        makale= self.get_object(pk=pk)
+        serializer =MakaleSerializer(makale, data=request.data)
+        if serializer.is_valid():
+            serializer.save()
+            return Response(serializer.data)
+        return Response(serializer.errors, status= status.HTTP_400_BAD_REQUEST)
+
+    def delete(self, request, pk):
+        makale = self.get_object(pk=pk)
+        makale.delete()
         return Response(status= status.HTTP_204_NO_CONTENT)
 
 #FUNCTİON BASED VİEWS

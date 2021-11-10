@@ -6,11 +6,13 @@ class Gazeteci(models.Model):
     soyisim = models.CharField(max_length=50)
     biyografi = models.CharField(max_length=50)
 
-    def _str__(self):
+    def __str__(self):
         return f'{self.isim} {self.soyisim}'
+
+    
 # Create your models here.
 class Makale(models.Model):
-    yazar = models.ForeignKey(Gazeteci, on_delete=models.CASCADE, related_name=)
+    yazar = models.ForeignKey(Gazeteci, on_delete=models.CASCADE, related_name="makaleler")
     baslik = models.CharField(max_length=50)
     metin = models.TextField()
     sehir = models.CharField(max_length=50)
@@ -59,3 +61,4 @@ class KategoriModel(models.Model):
 
     def __str__(self):
         return self.isim
+
